@@ -49,21 +49,21 @@ jobs:
             ${{ runner.os }}-buildx-
       - name: Install Docker Compose V2
         run: |
-          sudo apt update
-          sudo apt install docker-compose-plugin
-          docker-compose --version
+          sudo apt-get update
+          sudo apt-get install docker-compose-plugin
+          docker compose version
       - name: Build Docker Image
         run: |
-          docker-compose build
+          docker compose build
       - name: Start Docker Services
         run: |
-          docker-compose up -d
+          docker compose up -d
       - name: Health Check - FastAPI
         run: |
           curl -f http://localhost:8000/docs || exist 1
       - name: Check Celery Worker Logs
         run: |
-          docker-compose logs celery_worker
+          docker compose logs celery_worker
       - name: Stop & Clean all containers
         run: |
-          docker-compose down -v
+          docker compose down -v
