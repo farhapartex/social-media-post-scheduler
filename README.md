@@ -1,6 +1,8 @@
 # 📅 Social Media Post Scheduler  
 
-This is a **FastAPI** based backend for scheduling social media posts. This project is primarily meant for practicing Docker skills and should not be used in production. I am Dockerizing this application and will later add CI/CD pipelines and more advanced DevOps practices.
+This is a **FastAPI** based backend for scheduling social media posts. This project is primarily meant for practicing **Docker**, **Docker Compose**, **Redis**, and **Celery** skills and should not be used in production. 
+
+I am continuously enhancing this application by integrating advanced **DevOps** practices, including **CI/CD pipelines** and **background task management**.
 
 ---
 
@@ -8,94 +10,62 @@ This is a **FastAPI** based backend for scheduling social media posts. This proj
 This backend API allows you to:
 - Schedule posts for social media platforms.
 - Manage scheduled posts with CRUD operations.
-- Experiment with Docker containerization and networking.
+- **Redis** for caching and message brokering.
+- **Celery** for background tasks (e.g., scheduling posts).
+- **Docker Compose** for managing multi-container setup.
 
 **Note:** This project is solely for learning purposes and is not intended for production use.
 
 ---
 
-## 📦 **Docker Setup**  
-
-We are not using `docker-compose` for this project. Instead, the entire backend (FastAPI app + PostgreSQL database) is managed using **manual Docker commands**.
+## 📦 **Tech Stack**  
+- **FastAPI**: Web framework for building APIs.
+- **PostgreSQL**: Relational database.
+- **Redis**: Caching and message broker for Celery.
+- **Celery**: Background task management.
+- **Docker Compose**: Multi-container orchestration.
+- **Docker**: Containerization platform.
 
 ---
 
-### 🔗 **Create Docker Network**  
 
-Since we are not using Docker Compose, we need to create a custom network to enable communication between the backend app and the PostgreSQL database.
+## 📝 **Environment Variables**  
+The application uses the following environment variables:
 
+- `POSTGRES_USER`: PostgreSQL username
+- `POSTGRES_PASSWORD`: PostgreSQL password
+- `POSTGRES_DB`: PostgreSQL database name
+- `POSTGRES_HOST`: Hostname for PostgreSQL (`db` in Docker Compose)
+- `POSTGRES_PORT`: PostgreSQL port (`5432`)
+- `REDIS_HOST`: Hostname for Redis (`redis` in Docker Compose)
+- `REDIS_PORT`: Redis port (`6379`)
+- `REDIS_DB`: Redis database index (`0`)
+
+These variables are configured in the `docker-compose.yml` file.
+
+---
+
+## 🛠️ **Setup and Installation**  
+
+### 1. **Clone the Repository**  
 ```bash
-docker network create social_network
+git clone git@github.com:farhapartex/social-media-post-scheduler.git
+cd social-media-post-scheduler
 ```
 
-To verify the created network:
+---
+
+### 2. **Build and Run with Docker Compose**
 ```bash
-docker network ls
+docker-compose up --build
 ```
 
-## 🗃️ Database Setup
-
-We are using PostgreSQL 13 as our database.
-
-1. Pull PostgreSQL Image
-
+**To Stop the Containers:**
 ```bash
-docker pull postgres:13
+docker-compose down -v
 ```
 
-2. Run PostgreSQL Container
+### Accessing the Application
 
-Run the PostgreSQL container on the custom network:
-
-```bash
-docker run -d \
-  --name=social_db \
-  --network=social_network \
-  -e POSTGRES_USER=user \
-  -e POSTGRES_PASSWORD=password \
-  -e POSTGRES_DB=social_db \
-  -p 5432:5432 \
-  postgres:13
-```
-
-## 🛠️ Backend App Setup
-
-1. Build the FastAPI App Image
-
-```bash
-docker build -t social-media-post-scheduler .
-```
-
-2. Run the FastAPI App Container
-
-Run the backend container on the same network:
-
-```bash
-docker run -d \
-  -p 8000:8000 \
-  --name=sm-post-sch \
-  --network=social_network \
-  social-media-post-scheduler
-```
-
-## ❗ Common Error & Solution
-
-You might encounter the following error:
-
-```bash
-sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "db" to address: Name or service not known
-```
-
-## Reason:
-This occurs because the backend app cannot resolve the hostname **db**. This happens because, without **docker-compose**, the containers are not automatically placed in the same network.
-
-## Solution:
-Make sure to:
-
-1. Create a custom network: docker network create **social_network**
-2. Run both the database and backend containers on the same network using **--network=social_network**.
-
-## 🧪 Accessing the Application
-
-* The API will be available at: **http://localhost:8000**
-* Swagger documentation is accessible at: **http://localhost:8000/docs**
+* FastAPI: http://localhost:8000
+* Swagger Documentation: http://localhost:8000/docs
