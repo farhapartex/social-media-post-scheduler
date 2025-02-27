@@ -61,7 +61,20 @@ jobs:
           docker compose up -d
       - name: Health Check - FastAPI
         run: |
-          curl -f http://localhost:8000/docs || exist 1
+          for i in {1..5}; do
+            echo "Checking FastAPI service... Attempt $i"
+            if curl -f http://localhost:8000; then
+              echo "FastAPI is up and running!"
+              break
+            else
+              echo "FastAPI not ready yet. Retrying in 5 seconds..."
+              sleep 5
+            fi
+          done
+          if [ $? -ne 0 ]; then
+            echo "FastAPI failed to start."
+            exit 1
+          fi
       - name: Check Celery Worker Logs
         run: |
           docker compose logs celery_worker
