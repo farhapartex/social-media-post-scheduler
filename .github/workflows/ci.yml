@@ -47,6 +47,11 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+      - name: Install Docker Compose V2
+        run: |
+          sudo apt update
+          sudo apt install docker-compose-plugin
+          docker-compose --version
       - name: Build Docker Image
         run: |
           docker-compose build
