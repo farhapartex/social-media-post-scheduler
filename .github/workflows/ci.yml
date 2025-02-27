@@ -33,7 +33,7 @@ jobs:
         ports:
           - 5432:5432
     
-    setps:
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
