@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 ENV POSTGRES_USER=user \
     POSTGRES_PASSWORD=password \
     POSTGRES_DB=social_db \
-    POSTGRES_HOST=social_db \
+    POSTGRES_HOST=db \
     POSTGRES_PORT=5432
 
 EXPOSE 8000
