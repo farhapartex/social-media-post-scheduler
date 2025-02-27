@@ -78,6 +78,11 @@ jobs:
       - name: Check Celery Worker Logs
         run: |
           docker compose logs celery_worker
+      
+      - name: Run Tests
+        run: |
+          docker compose run tests
+
       - name: Stop & Clean all containers
         run: |
           docker compose down -v
