@@ -31,7 +31,7 @@ jobs:
           POSTGRES_PASSWORD: password
           POSTGRES_DB: social_db
         ports:
-          - 5432:5432
+          - "5433:5432"
     
     steps:
       - name: Checkout code
