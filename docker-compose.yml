@@ -27,5 +27,15 @@ services:
     ports:
       - "5432:5432"
 
+  redis:
+    container_name: social_redis
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"
+
+    volumes:
+      - redis_data:/data
+
 volumes:
   db_data:
+  redis_data:
