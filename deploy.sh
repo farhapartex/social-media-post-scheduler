@@ -1,13 +1,16 @@
-#!/bin/bahs
+#!/bin/bash
 
-docker-compose down -v
-docker-compose pull
-docker-compose up -d --build
+echo "Stopping existing containers..."
+docker-compose -f docker-compose.prod.yml down -v --remove-orphans
 
-# Run database migrations
+echo "Pulling the latest image from Docker Hub..."
+docker-compose -f docker-compose.prod.yml pull
 
-docker-compose exec web alembic upgrade head
+echo "Starting containers with the latest image..."
+docker-compose -f docker-compose.prod.yml up -d --build
 
-# Clean up old image
+echo "Running database migrations..."
+docker-compose -f docker-compose.prod.yml exec web alembic upgrade head
 
+echo "Cleaning up old images..."
 docker image prune -f
