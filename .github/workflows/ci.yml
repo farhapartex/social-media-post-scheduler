@@ -88,18 +88,18 @@ jobs:
           docker compose run tests
         continue-on-error: true
         
-      - name: Collect Test Results
-        if: always()
-        run: |
-          mkdir -p artifacts
-          docker cp $(docker ps -qf "name=social_tests"):/app/.pytest_cache artifacts/
-          docker cp $(docker ps -qf "name=social_tests"):/app/tests/logs artifacts/
-        continue-on-error: true
-      - name: Upload Test Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: artifacts/
+      # - name: Collect Test Results
+      #   if: always()
+      #   run: |
+      #     mkdir -p artifacts
+      #     docker cp $(docker ps -qf "name=social_tests"):/app/.pytest_cache artifacts/
+      #     docker cp $(docker ps -qf "name=social_tests"):/app/tests/logs artifacts/
+      #   continue-on-error: true
+      # - name: Upload Test Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: test-results
+      #     path: artifacts/
 
       - name: Stop & Clean all containers
         run: |
