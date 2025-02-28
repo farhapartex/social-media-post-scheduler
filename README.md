@@ -65,6 +65,21 @@ docker-compose up --build
 docker-compose down -v
 ```
 
+### 3. **Build and Run docker compose for production**
+```bash
+docker-compose -f docker-compose.prod.yml up -d --build
+```
+
+**To Stop all Containers:**
+```bash
+docker-compose -f docker-compose.prod.yml down -v --remove-orphans
+```
+
+**To Check Logs:**
+```bash
+docker logs social_web --tail 100
+```
+
 ### Accessing the Application
 
 * FastAPI: http://localhost:8000
