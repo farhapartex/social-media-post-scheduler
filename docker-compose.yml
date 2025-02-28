@@ -13,7 +13,7 @@ services:
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
-      - POSTGRES_HOST=db
+      - POSTGRES_HOST=social_db
       - POSTGRES_PORT=5433
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -25,7 +25,7 @@ services:
 
   db:
     image: postgres:13
-    container_name: db
+    container_name: social_db
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
