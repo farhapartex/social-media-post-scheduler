@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: nazmulhasan08/social-media-post-scheduler:latest
+    image: nazmulhasan08/social-media-post-scheduler-py:latest
     container_name: social_web
     restart: always
     ports:
