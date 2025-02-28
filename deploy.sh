@@ -1,16 +1,48 @@
 #!/bin/bash
 
-echo "Stopping existing containers..."
-docker-compose -f docker-compose.prod.yml down -v --remove-orphans
+# Configuration
+REPO_DIR="/home/ubuntu/social-media-post-scheduler"
+GIT_REPO_URL="https://github.com/farhapartex/social-media-post-scheduler.git"
+BRANCH="main"
+DOCKER_COMPOSE_FILE="docker-compose.prod.yml"
 
-echo "Pulling the latest image from Docker Hub..."
-docker-compose -f docker-compose.prod.yml pull
+echo "===== Starting Deployment ====="
 
-echo "Starting containers with the latest image..."
-docker-compose -f docker-compose.prod.yml up -d --build
+# Check if the directory exists
+if [ ! -d "$REPO_DIR" ]; then
+    echo "Directory $REPO_DIR does not exist. Cloning the repository..."
+    git clone $GIT_REPO_URL $REPO_DIR
+else
+    echo "Directory $REPO_DIR exists. Pulling the latest changes..."
+    cd $REPO_DIR
+    # Check if it's a valid Git repository
+    if [ -d ".git" ]; then
+        git fetch origin
+        git reset --hard origin/$BRANCH
+    else
+        echo "ERROR: $REPO_DIR is not a valid Git repository."
+        exit 1
+    fi
+fi
 
-echo "Running database migrations..."
-docker-compose -f docker-compose.prod.yml exec web alembic upgrade head
+cd $REPO_DIR
 
-echo "Cleaning up old images..."
+echo "===== Setting Permissions ====="
+chmod +x deploy.sh
+
+echo "===== Stopping Existing Containers ====="
+docker-compose -f $DOCKER_COMPOSE_FILE down -v --remove-orphans
+
+echo "===== Pulling Latest Image from Docker Hub ====="
+docker-compose -f $DOCKER_COMPOSE_FILE pull
+
+echo "===== Starting Containers with the Latest Image ====="
+docker-compose -f $DOCKER_COMPOSE_FILE up -d --build
+
+echo "===== Running Database Migrations ====="
+docker-compose -f $DOCKER_COMPOSE_FILE exec web alembic upgrade head
+
+echo "===== Cleaning Up Old Docker Images ====="
 docker image prune -f
+
+echo "===== Deployment Completed Successfully! ====="
