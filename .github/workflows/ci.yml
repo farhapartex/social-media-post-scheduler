@@ -96,7 +96,7 @@ jobs:
           docker cp $(docker ps -qf "name=social_tests"):/app/tests/logs artifacts/
         continue-on-error: true
       - name: Upload Test Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: artifacts/
