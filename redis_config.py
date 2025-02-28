@@ -21,3 +21,4 @@ try:
     print("Connected to Redis")
 except redis.ConnectionError:
     print("Redis connection failed")
+

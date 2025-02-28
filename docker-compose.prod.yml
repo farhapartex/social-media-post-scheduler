@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  web:
+    image: nazmulhasan08/social-media-post-scheduler:latest
+    container_name: social_web
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+    depends_on:
+      - db
+      - redis
+      - celery_worker
+
+  db:
+    image: postgres:13
+    container_name: social_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: social_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  celery_worker:
+    image: nazmulhasan08/social-media-post-scheduler:latest
+    container_name: celery_worker
+    command: celery -A celery_config.celery_app worker --loglevel=info
+    depends_on:
+      - redis
+
+volumes:
+  db_data:
+  redis_data:
