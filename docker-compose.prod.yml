@@ -20,6 +20,8 @@ services:
       - db
       - redis
       - celery_worker
+    networks:
+      - social_network
 
   db:
     image: postgres:13
@@ -33,6 +35,8 @@ services:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - social_network
 
   redis:
     image: redis:7.4-alpine
@@ -42,6 +46,8 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - social_network
 
   celery_worker:
     image: nazmulhasan08/social-media-post-scheduler:latest
@@ -49,6 +55,10 @@ services:
     command: celery -A celery_config.celery_app worker --loglevel=info
     depends_on:
       - redis
+
+networks:
+  social_network:
+    driver: bridge
 
 volumes:
   db_data:
